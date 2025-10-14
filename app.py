@@ -3,6 +3,9 @@ import customtkinter as ctk
 from customtkinter import CTkImage
 from tkinter import filedialog
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+from io import BytesIO
 
 ctk.set_appearance_mode("dark")
 
@@ -38,6 +41,91 @@ def seleccionarImagen():
     imgOriginal.configure(text="", image=foto)
     imgOriginal.image = foto
     crearBotones()
+    crearHistogramas()
+
+def crearHistogramas():
+    global dataFrameim
+
+    pixelesRojos = []
+    pixelesVerdes = []
+    pixelesAzules = []
+    piexelesLuz = []
+
+    for pixel in dataFrameim:
+        r, g, b = pixel
+        pixelesRojos.append(r)
+        pixelesVerdes.append(g)
+        pixelesAzules.append(b)
+        piexelesLuz.append(((r * 0.299) + (g * 0.587) + (b * 0.114)))
+    
+    # Crear histograma de escala de grises
+    fig, ax = plt.subplots(figsize=(3, 2), facecolor='black')
+    ax.set_facecolor('black')
+    ax.hist(piexelesLuz, bins=50, range=(0, 255), color='gray', alpha=0.8)
+    ax.set_title('Escala de Grises', color='white', fontsize=10)
+    ax.tick_params(colors='white', labelsize=8)
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='PNG', facecolor='black', bbox_inches='tight', dpi=80)
+    buffer.seek(0)
+    hist_image = Image.open(buffer)
+    ctk_image = CTkImage(light_image=hist_image, size=(299, 150))
+    lblHGY.configure(image=ctk_image, text="")
+    lblHGY.image = ctk_image
+    plt.close(fig)
+    buffer.close()
+    
+    # Crear histograma rojo
+    fig, ax = plt.subplots(figsize=(3, 2), facecolor='black')
+    ax.set_facecolor('black')
+    ax.hist(pixelesRojos, bins=50, range=(0, 255), color='red', alpha=0.8)
+    ax.set_title('Canal Rojo', color='white', fontsize=10)
+    ax.tick_params(colors='white', labelsize=8)
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='PNG', facecolor='black', bbox_inches='tight', dpi=80)
+    buffer.seek(0)
+    hist_image = Image.open(buffer)
+    ctk_image = CTkImage(light_image=hist_image, size=(299, 150))
+    lblHR.configure(image=ctk_image, text="")
+    lblHR.image = ctk_image
+    plt.close(fig)
+    buffer.close()
+    
+    # Crear histograma verde
+    fig, ax = plt.subplots(figsize=(3, 2), facecolor='black')
+    ax.set_facecolor('black')
+    ax.hist(pixelesVerdes, bins=50, range=(0, 255), color='green', alpha=0.8)
+    ax.set_title('Canal Verde', color='white', fontsize=10)
+    ax.tick_params(colors='white', labelsize=8)
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='PNG', facecolor='black', bbox_inches='tight', dpi=80)
+    buffer.seek(0)
+    hist_image = Image.open(buffer)
+    ctk_image = CTkImage(light_image=hist_image, size=(299, 150))
+    lblHGR.configure(image=ctk_image, text="")
+    lblHGR.image = ctk_image
+    plt.close(fig)
+    buffer.close()
+    
+    # Crear histograma azul
+    fig, ax = plt.subplots(figsize=(3, 2), facecolor='black')
+    ax.set_facecolor('black')
+    ax.hist(pixelesAzules, bins=50, range=(0, 255), color='blue', alpha=0.8)
+    ax.set_title('Canal Azul', color='white', fontsize=10)
+    ax.tick_params(colors='white', labelsize=8)
+    plt.tight_layout()
+    buffer = BytesIO()
+    plt.savefig(buffer, format='PNG', facecolor='black', bbox_inches='tight', dpi=80)
+    buffer.seek(0)
+    hist_image = Image.open(buffer)
+    ctk_image = CTkImage(light_image=hist_image, size=(299, 150))
+    lblHB.configure(image=ctk_image, text="")
+    lblHB.image = ctk_image
+    plt.close(fig)
+    buffer.close()
+    
 
 
 # NEGATIVO
@@ -67,7 +155,7 @@ def convertirColor(color):
         pixelNuevo=[0, 0, 0]
         pixelNuevo[index] = pixel[index]
         imagenColor.append(tuple(pixelNuevo))
-
+    
     mostrarImagen(imagenColor)
 
 
@@ -80,6 +168,9 @@ def convertirBN():
         r, g, b = pixel
         pixelBN = (r * 0.299) + (g * 0.587) + (b * 0.114)
         imgBN.append(pixelBN)
+    
+    plt.hist(imgBN, bins=256, range=(0,255), density=False)
+    plt.show()
 
     nuevaImagen = Image.new("L", imSize)
     nuevaImagen.putdata(imgBN)
@@ -136,6 +227,23 @@ btnSelectImage.pack(side="right", padx=(0, 30))
 infoAside = ctk.CTkFrame(app, width=300, fg_color=backgroundColor, corner_radius=0, border_color=borderColor, border_width=1)
 infoAside.pack(side="left", fill="y", padx=(10, 0), pady=(0, 10))
 
+infoAside.grid_rowconfigure(0, weight=1)
+infoAside.grid_rowconfigure(1, weight=1)
+infoAside.grid_rowconfigure(2, weight=1)
+infoAside.grid_rowconfigure(3, weight=1)
+
+lblHGY = ctk.CTkLabel(infoAside, text=" ", fg_color="transparent", width=299)
+lblHGY.grid(column=0, row=0, sticky="nsew")
+
+lblHR = ctk.CTkLabel(infoAside, text=" ", fg_color="transparent", width=299)
+lblHR.grid(column=0, row=1, sticky="nsew")
+
+lblHGR = ctk.CTkLabel(infoAside, text=" ", fg_color="transparent", width=299)
+lblHGR.grid(column=0, row=2, sticky="nsew")
+
+lblHB = ctk.CTkLabel(infoAside, text=" ", fg_color="transparent", width=300)
+lblHB.grid(column=0, row=3, sticky="nsew")
+
 # Main
 main = ctk.CTkFrame(app, fg_color=backgroundColor, corner_radius=0, border_color=borderColor, border_width=1)
 main.pack(expand=True, fill="both", padx=(0, 10), pady=(0, 10), ipady=0, ipadx=0)
@@ -157,7 +265,6 @@ options.pack_propagate(False)
 
 btnsFrame = ctk.CTkFrame(options, fg_color="transparent", height=80)
 btnsFrame.pack(expand=True)
-
 
 
 app.mainloop()
