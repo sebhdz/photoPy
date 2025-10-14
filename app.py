@@ -16,6 +16,10 @@ backgroundColor = '#0B0B0D'
 secondaryBackground = '#1B1B1B'
 borderColor = '#383838'
 
+red="#2B1111"
+green = "#06291D"
+blue = "#051943"
+
 ESTILO_BOTON = {
     "corner_radius":0,
     "font":("JetBrains Mono", 12),
@@ -78,7 +82,7 @@ def crearHistogramas():
     # Crear histograma rojo
     fig, ax = plt.subplots(figsize=(3, 2), facecolor='black')
     ax.set_facecolor('black')
-    ax.hist(pixelesRojos, bins=50, range=(0, 255), color='red', alpha=0.8)
+    ax.hist(pixelesRojos, bins=50, range=(0, 255), color='#D8374E', alpha=0.8)
     ax.set_title('Canal Rojo', color='white', fontsize=10)
     ax.tick_params(colors='white', labelsize=8)
     plt.tight_layout()
@@ -95,7 +99,7 @@ def crearHistogramas():
     # Crear histograma verde
     fig, ax = plt.subplots(figsize=(3, 2), facecolor='black')
     ax.set_facecolor('black')
-    ax.hist(pixelesVerdes, bins=50, range=(0, 255), color='green', alpha=0.8)
+    ax.hist(pixelesVerdes, bins=50, range=(0, 255), color='#0BA16E', alpha=0.8)
     ax.set_title('Canal Verde', color='white', fontsize=10)
     ax.tick_params(colors='white', labelsize=8)
     plt.tight_layout()
@@ -112,7 +116,7 @@ def crearHistogramas():
     # Crear histograma azul
     fig, ax = plt.subplots(figsize=(3, 2), facecolor='black')
     ax.set_facecolor('black')
-    ax.hist(pixelesAzules, bins=50, range=(0, 255), color='blue', alpha=0.8)
+    ax.hist(pixelesAzules, bins=50, range=(0, 255), color="#0A2256", alpha=0.8)
     ax.set_title('Canal Azul', color='white', fontsize=10)
     ax.tick_params(colors='white', labelsize=8)
     plt.tight_layout()
@@ -188,25 +192,25 @@ def mostrarImagen(pixeles):
     imgEditada.configure(image=foto, text="")
     imgEditada.image = foto
 
-
+# BOTONES
 btnNegativo  = None
 def crearBotones():
     global btnNegativo
     if btnNegativo:
         return
-    btnNegativo = ctk.CTkButton(btnsFrame, text="Negativo", command=convertirNegativo, **ESTILO_BOTON)
+    btnNegativo = ctk.CTkButton(btnsFrame, text="Negativo", command=convertirNegativo, **ESTILO_BOTON, fg_color="#373737", text_color="#7E8799")
     btnNegativo.pack(side="left", padx=10)
 
-    btnRojo = ctk.CTkButton(btnsFrame, text="Rojo", command=lambda: convertirColor('rojo'), **ESTILO_BOTON)
+    btnRojo = ctk.CTkButton(btnsFrame, text="Rojo", command=lambda: convertirColor('rojo'), **ESTILO_BOTON, fg_color=red, text_color="#D8374E")
     btnRojo.pack(side="left", padx=10)
 
-    btnVerde = ctk.CTkButton(btnsFrame, text="Verde", command=lambda: convertirColor('verde'), **ESTILO_BOTON)
+    btnVerde = ctk.CTkButton(btnsFrame, text="Verde", command=lambda: convertirColor('verde'), **ESTILO_BOTON, fg_color=green, text_color="#0BA16E")
     btnVerde.pack(side="left", padx=10)
 
-    btnAzul = ctk.CTkButton(btnsFrame, text="Azul", command=lambda: convertirColor('azul'), **ESTILO_BOTON)
+    btnAzul = ctk.CTkButton(btnsFrame, text="Azul", command=lambda: convertirColor('azul'), **ESTILO_BOTON, fg_color=blue, text_color="#7E8799")
     btnAzul.pack(side="left", padx=10)
     
-    btnBN = ctk.CTkButton(btnsFrame, text="Escala de grises", command=convertirBN, **ESTILO_BOTON)
+    btnBN = ctk.CTkButton(btnsFrame, text="Escala de grises", command=convertirBN, **ESTILO_BOTON, fg_color="#444444")
     btnBN.pack(side="left", padx=10)
 
 app = ctk.CTk()
@@ -219,7 +223,10 @@ header = ctk.CTkFrame(app, height=100, fg_color=secondaryBackground,corner_radiu
 header.pack(side="top", fill="x", padx=10, pady=(10, 0))
 header.pack_propagate(False)
 
-btnSelectImage = ctk.CTkButton(header, text="Elegir imagen", command=seleccionarImagen, **ESTILO_BOTON)
+lblTitle = ctk.CTkLabel(header, text="photoPy", fg_color="transparent", font=("JetBrains Mono Bold", 40))
+lblTitle.pack(side="left", padx=(40, 0), fill="x")
+
+btnSelectImage = ctk.CTkButton(header, text="Elegir imagen", command=seleccionarImagen, **ESTILO_BOTON, fg_color="#C79228", text_color="black")
 btnSelectImage.pack(side="right", padx=(0, 30))
 
 
