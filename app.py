@@ -131,7 +131,6 @@ def crearHistogramas():
     buffer.close()
     
 
-
 # NEGATIVO
 def convertirNegativo():
     global dataFrameim
@@ -181,7 +180,47 @@ def convertirBN():
     foto = CTkImage(light_image=nuevaImagen, size=imSize)
     imgEditada.configure(image=foto, text="")
     imgEditada.image = foto
-    
+
+def blur():
+    global dataFrameim
+
+    matriz = convertirMatrices(dataFrameim)
+
+    imagenBlur = []
+
+    for fila in range (len(matriz)):
+        for columna in range(len(matriz[fila])):
+            matrizVecinos = []
+            for x in range(-2, 3):
+                for y in range(-2, 3):
+                    if (((fila + x) < 0) or ((columna + y) < 0) or ((fila + x) > len(matriz) - 1) or ((columna + y) > len(matriz[0]) - 1)):
+                        continue
+                    matrizVecinos.append(matriz[fila + x][columna + y])
+            rojos = 0
+            verdes = 0
+            azules = 0
+            for pixel in matrizVecinos:
+                r, g, b = pixel
+                rojos += r
+                verdes += g
+                azules += b
+            rojos = round(rojos/(len(matrizVecinos)))
+            verdes = round(verdes/(len(matrizVecinos)))
+            azules = round(azules/(len(matrizVecinos)))
+            imagenBlur.append(tuple((rojos, verdes, azules)))
+    mostrarImagen(imagenBlur)
+
+
+
+def convertirMatrices(pixeles):
+    matrizPixeles = []
+    contador = 0
+    for _ in range(imSize[0]):
+        filaPixeles = pixeles[contador : contador + imSize[1]]
+        matrizPixeles.append(filaPixeles)
+        contador += imSize[1]
+    return matrizPixeles
+
 # MOSTRAR IMAGEN
 def mostrarImagen(pixeles):
 
@@ -211,6 +250,9 @@ def crearBotones():
     btnAzul.pack(side="left", padx=10)
     
     btnBN = ctk.CTkButton(btnsFrame, text="Escala de grises", command=convertirBN, **ESTILO_BOTON, fg_color="#444444")
+    btnBN.pack(side="left", padx=10)
+
+    btnBN = ctk.CTkButton(btnsFrame, text="Blur", command=blur, **ESTILO_BOTON, fg_color="#B09C7F")
     btnBN.pack(side="left", padx=10)
 
 app = ctk.CTk()
