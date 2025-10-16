@@ -171,9 +171,6 @@ def convertirBN():
         r, g, b = pixel
         pixelBN = (r * 0.299) + (g * 0.587) + (b * 0.114)
         imgBN.append(pixelBN)
-    
-    plt.hist(imgBN, bins=256, range=(0,255), density=False)
-    plt.show()
 
     nuevaImagen = Image.new("L", imSize)
     nuevaImagen.putdata(imgBN)
@@ -208,6 +205,29 @@ def blur():
                 pixelNuevo[i] = round(pixelNuevo[i] / (len(matrizVecinos)))
             imagenBlur.append(tuple(pixelNuevo))  
     mostrarImagen(imagenBlur)
+
+def binarizar():
+    global dataFrameim
+
+    imagenBinarizada = []
+    imagenGris = []
+    for pixel in dataFrameim:
+        r, g, b = pixel
+        pixelGris = (r * 0.299) + (g * 0.587) + (b * 0.114)
+        imagenGris.append(round(pixelGris))
+    promedio = (sum(imagenGris))/(len(imagenGris))
+    
+    for pixel in imagenGris:
+        if pixel < promedio:
+            imagenBinarizada.append(0)
+        else:
+            imagenBinarizada.append(1)
+
+    nuevaImagen = Image.new("1", imSize)
+    nuevaImagen.putdata(imagenBinarizada)
+    foto = CTkImage(light_image=nuevaImagen, size=imSize)
+    imgEditada.configure(image=foto, text="")
+    imgEditada.image = foto
 
 
 
@@ -252,6 +272,9 @@ def crearBotones():
     btnBN.pack(side="left", padx=10)
 
     btnBN = ctk.CTkButton(btnsFrame, text="Blur", command=blur, **ESTILO_BOTON, fg_color="#B09C7F")
+    btnBN.pack(side="left", padx=10)
+
+    btnBN = ctk.CTkButton(btnsFrame, text="Binarizar", command=binarizar, **ESTILO_BOTON, fg_color="#B09C7F")
     btnBN.pack(side="left", padx=10)
 
 app = ctk.CTk()
