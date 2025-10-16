@@ -191,23 +191,22 @@ def blur():
     for fila in range (len(matriz)):
         for columna in range(len(matriz[fila])):
             matrizVecinos = []
+            ## Por cada pixel encontramos una matriz 3x3 de sus vecinos y la añado a una lista
             for x in range(-2, 3):
                 for y in range(-2, 3):
                     if (((fila + x) < 0) or ((columna + y) < 0) or ((fila + x) > len(matriz) - 1) or ((columna + y) > len(matriz[0]) - 1)):
                         continue
                     matrizVecinos.append(matriz[fila + x][columna + y])
-            rojos = 0
-            verdes = 0
-            azules = 0
+            ## En base a la matriz 3x3 saco un promedio de cada canal para añadirlo al nuevo pixel y despues a la nueva imagen
+            pixelNuevo = [0, 0, 0]
+            ## Sumo todos los colores
             for pixel in matrizVecinos:
-                r, g, b = pixel
-                rojos += r
-                verdes += g
-                azules += b
-            rojos = round(rojos/(len(matrizVecinos)))
-            verdes = round(verdes/(len(matrizVecinos)))
-            azules = round(azules/(len(matrizVecinos)))
-            imagenBlur.append(tuple((rojos, verdes, azules)))
+                for i in range(3):
+                    pixelNuevo[i] += pixel[i]
+            ## Los divido
+            for i in range(3):
+                pixelNuevo[i] = round(pixelNuevo[i] / (len(matrizVecinos)))
+            imagenBlur.append(tuple(pixelNuevo))  
     mostrarImagen(imagenBlur)
 
 
