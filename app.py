@@ -221,9 +221,9 @@ def binarizar():
         if pixel < promedio:
             imagenBinarizada.append(0)
         else:
-            imagenBinarizada.append(1)
+            imagenBinarizada.append(255)
 
-    nuevaImagen = Image.new("1", imSize)
+    nuevaImagen = Image.new("L", imSize)
     nuevaImagen.putdata(imagenBinarizada)
     foto = CTkImage(light_image=nuevaImagen, size=imSize)
     imgEditada.configure(image=foto, text="")
@@ -271,10 +271,10 @@ def crearBotones():
     btnBN = ctk.CTkButton(btnsFrame, text="Escala de grises", command=convertirBN, **ESTILO_BOTON, fg_color="#444444")
     btnBN.pack(side="left", padx=10)
 
-    btnBN = ctk.CTkButton(btnsFrame, text="Blur", command=blur, **ESTILO_BOTON, fg_color="#B09C7F")
-    btnBN.pack(side="left", padx=10)
+    btnBin = ctk.CTkButton(btnsFrame, text="Blur", command=blur, **ESTILO_BOTON, fg_color="#B09C7F")
+    btnBin.pack(side="left", padx=10)
 
-    btnBN = ctk.CTkButton(btnsFrame, text="Binarizar", command=binarizar, **ESTILO_BOTON, fg_color="#B09C7F")
+    btnBN = ctk.CTkButton(secondBtnFrame, text="Binarizar", command=binarizar, **ESTILO_BOTON, fg_color="#B09C7F")
     btnBN.pack(side="left", padx=10)
 
 app = ctk.CTk()
@@ -334,8 +334,11 @@ options = ctk.CTkFrame(main, fg_color=backgroundColor, corner_radius=0, border_c
 options.grid(column=0, columnspan=2, row=1, sticky="nsew")
 options.pack_propagate(False)
 
-btnsFrame = ctk.CTkFrame(options, fg_color="transparent", height=80)
+btnsFrame = ctk.CTkFrame(options, fg_color="transparent", height=40)
 btnsFrame.pack(expand=True)
+
+secondBtnFrame = ctk.CTkFrame(options, fg_color="transparent", height=40)
+secondBtnFrame.pack(expand=True)
 
 
 app.mainloop()
